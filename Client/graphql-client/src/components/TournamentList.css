@@ -1,0 +1,37 @@
+/* components/TournamentList.css */
+.tournament-list h2 {
+	color: #4b5563;
+	margin-bottom: 20px;
+}
+
+.filter-buttons {
+	margin-bottom: 20px;
+}
+
+.filter-buttons button {
+	margin-right: 10px;
+}
+
+.tournament-list ul {
+	list-style: none;
+	padding: 0;
+}
+
+.tournament-list li {
+	background-color: #f9fafb;
+	padding: 10px;
+	margin-bottom: 10px;
+	border-radius: 5px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.tournament-list a {
+	color: #6b7280;
+	text-decoration: none;
+}
+
+.tournament-list a:hover {
+	color: #1f2937;
+}

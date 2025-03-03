@@ -1,0 +1,36 @@
+/* components/Profile.css */
+.profile h2 {
+	color: #4b5563;
+	margin-bottom: 20px;
+}
+
+.profile p {
+	color: #6b7280;
+	margin: 5px 0;
+}
+
+.profile h3 {
+	color: #4b5563;
+	margin-top: 20px;
+}
+
+.profile ul {
+	list-style: none;
+	padding: 0;
+}
+
+.profile li {
+	background-color: #f9fafb;
+	padding: 8px;
+	margin-bottom: 5px;
+	border-radius: 5px;
+}
+
+.delete-button {
+	background-color: #f87171;
+	margin-top: 20px;
+}
+
+.delete-button:hover {
+	background-color: #ef4444;
+}

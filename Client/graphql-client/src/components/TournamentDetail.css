@@ -1,0 +1,31 @@
+/* components/TournamentDetail.css */
+.tournament-detail h2 {
+	color: #4b5563;
+	margin-bottom: 20px;
+}
+
+.tournament-detail p {
+	color: #6b7280;
+	margin: 5px 0;
+}
+
+.tournament-detail h3 {
+	color: #4b5563;
+	margin-top: 20px;
+}
+
+.tournament-detail ul {
+	list-style: none;
+	padding: 0;
+}
+
+.tournament-detail li {
+	background-color: #f9fafb;
+	padding: 8px;
+	margin-bottom: 5px;
+	border-radius: 5px;
+}
+
+.tournament-detail button {
+	margin-top: 20px;
+}

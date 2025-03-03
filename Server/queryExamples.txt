@@ -1,0 +1,110 @@
+Registering a user:
+
+mutation RegisterUser {
+  register(username: "newplayer", email: "newplayer@example.com", password: "password123", role: "Player") {
+    user {
+      id
+      username
+      email
+      role
+    }
+    token
+  }
+}
+
+login a user:
+
+mutation LoginNewPlayer {
+  login(email: "newplayer@example.com", password: "password123") {
+    user {
+      id
+      username
+      email
+      role
+    }
+    token
+  }
+}
+
+Find the players:
+
+query GetPlayerForUser {
+  players {
+    id
+    user {
+      id
+      username
+      email
+      role
+    }
+    ranking
+    tournaments {
+      id
+    }
+  }
+}
+
+Create a tournament
+
+mutation CreateTournament {
+  createTournament(
+    name: "Spring Championship"
+    game: "Chess"
+    date: "2025-03-10"
+    status: "Upcoming"
+  ) {
+    id
+    name
+    game
+    date
+    status
+    players {
+      id
+    }
+  }
+}
+
+Signup a player to a torunament:
+
+mutation JoinTournament {
+  joinTournament(playerId: "somePlayerId", tournamentId: "someTournamentId") {
+    id
+    name
+    status
+    players {
+      id
+      user {
+        username
+      }
+      ranking
+    }
+  }
+}
+
+edit a tournament:
+
+mutation EditTournament {
+  editTournament(
+    tournamentId: "tournamentID"
+    name: "Summer Open"
+    status: "Upcoming"
+  ) {
+    id
+    name
+    game
+    date
+    status
+    players {
+      id
+      user {
+        username
+      }
+    }
+  }
+}
+
+delete user
+
+mutation DeleteTestUser {
+  deleteUser(userId: "67c4918514893aec8655d250")
+}
