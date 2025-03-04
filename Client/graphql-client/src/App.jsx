@@ -8,6 +8,8 @@ import AuthForm from "./components/AuthForm";
 import Profile from "./components/Profile";
 import History from "./components/History.jsx";
 import TournamentDetail from "./components/TournamentDetail";
+import Players from "./components/Players.jsx";
+import TournamentEditor from "./components/TournamentEditor.jsx";
 
 function App() {
   const { user } = useAuth();
@@ -22,16 +24,28 @@ function App() {
               <li>
                 <Link to="/">Tournaments</Link>
               </li>
-              {user && (
-                <>
-                  <li>
-                    <Link to="/profile">Profile</Link>
-                  </li>
-                  <li>
-                    <Link to="/history">History</Link>
-                  </li>
-                </>
-              )}
+        {user && (
+          <>
+            <li>
+              <Link to="/profile">Profile</Link>
+            </li>
+            {user.role === "Player" && (
+              <li>
+                <Link to="/history">History</Link>
+              </li>
+            )}
+            {user.role === "Admin" && (
+              <>
+                <li>
+                  <Link to="/players">Players</Link>
+                </li>
+                <li>
+                  <Link to="/createtournament">Create Tournament</Link>
+                </li>
+              </>
+            )}
+          </>
+        )}
             </ul>
           </nav>
           <div className="auth-section">
@@ -42,7 +56,10 @@ function App() {
           <Routes>
             <Route path="/" element={<TournamentList />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/players" element={<Players />} />
             <Route path="/history" element={<History />} />
+            <Route path="/createtournament" element={<TournamentEditor create={true}/>} />
+            <Route path="/edittournament" element={<TournamentEditor create={false}/>} />
             <Route path="/tournament/:id" element={<TournamentDetail />} />
           </Routes>
         </main>

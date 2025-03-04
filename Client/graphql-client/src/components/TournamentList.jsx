@@ -11,10 +11,7 @@ const GET_TOURNAMENTS = gql`
 			name
 			game
 			date
-			status
-			players {
-				id
-			}
+			status			
 		}
 	}
 `;
@@ -44,8 +41,7 @@ function TournamentList() {
 					<li key={tournament.id}>
 						<Link to={`/tournament/${tournament.id}`}>
 							{tournament.name} ({tournament.game}) - {tournament.status}
-						</Link>
-						<span> Players: {tournament.players.length}</span>
+						</Link>						
 					</li>
 				))}
 			</ul>
