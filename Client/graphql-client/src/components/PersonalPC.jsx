@@ -43,7 +43,7 @@ function PersonalPC() {
 				const center = box.getCenter(new THREE.Vector3());
 				const size = box.getSize(new THREE.Vector3());
 				const maxDim = Math.max(size.x, size.y, size.z);
-				const scale = 5 / maxDim;
+				const scale = 6 / maxDim;
 
 				model.scale.set(scale, scale, scale);
 				model.position.sub(center.multiplyScalar(scale)); // Center at origin
@@ -89,8 +89,11 @@ function PersonalPC() {
 
 		// Cleanup
 		return () => {
-			while (mountRef.current.firstChild) {
-				mountRef.current.removeChild(mountRef.current.firstChild);
+			// Check if mountRef.current exists before cleanup
+			if (mountRef.current) {
+				while (mountRef.current.firstChild) {
+					mountRef.current.removeChild(mountRef.current.firstChild);
+				}
 			}
 		};
 	}, []);

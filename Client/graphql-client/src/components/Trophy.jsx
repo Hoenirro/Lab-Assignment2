@@ -24,7 +24,7 @@ function Trophy() {
 		mountRef.current.appendChild(renderer.domElement);
 
 		// Lighting
-		const ambientLight = new THREE.AmbientLight(0x404040, 2); // Increased light intensity
+		const ambientLight = new THREE.AmbientLight(0x404040, 1000); // Increased light intensity
 		scene.add(ambientLight);
 		const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 		directionalLight.position.set(5, 5, 5).normalize();
@@ -43,7 +43,7 @@ function Trophy() {
 				const center = box.getCenter(new THREE.Vector3());
 				const size = box.getSize(new THREE.Vector3());
 				const maxDim = Math.max(size.x, size.y, size.z);
-				const scale = 5 / maxDim;
+				const scale = 15 / maxDim;
 
 				model.scale.set(scale, scale, scale);
 				model.position.sub(center.multiplyScalar(scale)); // Center at origin
@@ -89,8 +89,11 @@ function Trophy() {
 
 		// Cleanup
 		return () => {
-			while (mountRef.current.firstChild) {
-				mountRef.current.removeChild(mountRef.current.firstChild);
+			// Check if mountRef.current exists before cleanup
+			if (mountRef.current) {
+				while (mountRef.current.firstChild) {
+					mountRef.current.removeChild(mountRef.current.firstChild);
+				}
 			}
 		};
 	}, []);
