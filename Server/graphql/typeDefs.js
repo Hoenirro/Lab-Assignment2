@@ -28,9 +28,11 @@ const typeDefs = `#graphql
     isLoggedIn: Boolean!
     tournaments: [Tournament!]
     tournament(id: ID!): Tournament    
+    isPlayerInTournament(playerId: ID!, tournamentId: ID!): Boolean
     player(id: ID!): Player
     playerByUserId(userId: ID!): Player    
-    players: [Player!]
+    playerByUsername(username: String!): [Player]
+    players: [Player!]    
   }
 
   type Mutation {

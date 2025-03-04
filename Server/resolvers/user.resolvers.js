@@ -16,7 +16,7 @@ const userResolvers = {
     createUser: async (_, { username, email, password, role }) => {
       const newUser = new UserModel({ username, email, password, role });
       await newUser.save();
-
+      console.log(role);
       if (role === "Player") {
         const player = new PlayerModel({
           user: newUser._id,

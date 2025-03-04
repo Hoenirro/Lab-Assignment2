@@ -1,6 +1,6 @@
 // components/AuthForm.jsx
 import React, { useState, useEffect } from "react";
-import { useMutation, gql } from "@apollo/client";
+import { useMutation, useQuery, gql } from "@apollo/client";
 import { useAuth } from "../AuthContext.jsx";
 import "./AuthForm.css";
 
@@ -40,16 +40,40 @@ const LOG_OUT = gql`
 	}
 `;
 
+const GET_PLAYER_BY_USER_ID = gql`
+	query GetPlayerByUserId($userId: ID!) {
+		playerByUserId(userId: $userId){
+			id
+		}		
+	}
+`;
+
 function AuthForm() {
-	const { user, login, logout, refresh } = useAuth();
+	const { user, login, logout, setPlayerInfo } = useAuth();
+	const [userId, setUserId] = useState("");
 	const [isRegister, setIsRegister] = useState(false);
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [repeatPassword, setRepeatPassword] = useState("");
+	const [role, setRole] = useState("Player");
 	const [username, setUsername] = useState("");
 	const [register] = useMutation(REGISTER);
 	const [loginMutation] = useMutation(LOGIN);
 	const [logOut] = useMutation(LOG_OUT);		
+	const { loading, error, data: playerData, refetch } = useQuery(GET_PLAYER_BY_USER_ID, 
+		{
+			variables: { userId },
+			skip: !user || user.role !== "Player",
+		}
+	); // Fetch player data
+
+	useEffect(() => {
+		if (user && user.role === "Player") {
+			refetch().then(({ data }) => {								
+				setPlayerInfo(data.playerByUserId.id);
+			});
+		}
+	}, [user, refetch]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -60,7 +84,7 @@ function AuthForm() {
 					return;
 				}
 				const { data } = await register({
-					variables: { username, email, password, role: "Player" },
+					variables: { username, email, password, role },
 				});								
 				setEmail("");
 				setPassword("");
@@ -71,12 +95,11 @@ function AuthForm() {
 				const { data } = await loginMutation({
 					variables: { email, password },
 				});
-				login(data.login);
-				// login(data.login.user, data.login.token);
+				login(data.login);	
+				setUserId(data.login.id);			
 				setEmail("");
 				setPassword("");
-				console.log("Login user data:", data.login);
-				// login(data.login.user, data.login.token);
+				console.log("Login user data:", data.login);				
 				alert("Logged in successfully!");
 			}
 		} catch (error) {
@@ -132,6 +155,7 @@ function AuthForm() {
 				required
 			/>
 			{isRegister && (
+				<>
 				<input
 					type="password"
 					placeholder="Repeat Password"
@@ -139,6 +163,27 @@ function AuthForm() {
 					onChange={(e) => setRepeatPassword(e.target.value)}
 					required
 				/>
+				<div>
+					<label>
+						<input
+							type="radio"
+							value="Player"
+							checked={role === "Player"}
+							onChange={(e) => setRole(e.target.value)}
+						/>
+						Player
+					</label>
+					<label>
+						<input
+							type="radio"
+							value="Admin"
+							checked={role === "Admin"}
+							onChange={(e) => setRole(e.target.value)}
+						/>
+						Admin
+					</label>
+				</div>
+				</>
 			)}
 			<button type="submit">{isRegister ? "Register" : "Login"}</button>
 			<p onClick={() => setIsRegister(!isRegister)} className="toggle-auth">

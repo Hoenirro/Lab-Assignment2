@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const { Schema } = mongoose;
-const PlayerSchema = new Schema({
+const PlayerSchema = new Schema({  
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",

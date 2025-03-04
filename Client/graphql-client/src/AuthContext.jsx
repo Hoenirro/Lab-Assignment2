@@ -4,6 +4,7 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
 	const [user, setUser] = useState(null);
+	const [playerId, setPlayerId] = useState(null);
 
 	useEffect(() => {
 		const storedUser = localStorage.getItem("user");
@@ -15,6 +16,11 @@ export function AuthProvider({ children }) {
 				localStorage.removeItem("user");
 			}
 		}
+		const storedPlayerInfo = localStorage.getItem("player");
+		if (storedPlayerInfo) {
+			setUser(JSON.parse(storedPlayerInfo)); // Load user from localStorage
+		}
+
 	}, []);
 
 	const login = (userData) => {
@@ -24,11 +30,18 @@ export function AuthProvider({ children }) {
 
 	const logout = () => {
 		setUser(null);
+		setPlayerId(null);
 		localStorage.removeItem("user");
+		localStorage.removeItem("playerId");
 	};
 
+	const setPlayerInfo = (id) => {
+		setPlayerId(id);
+		localStorage.setItem("playerId", JSON.stringify(id)); // Store whole user object
+	};	
+
 	return (
-		<AuthContext.Provider value={{ user, login, logout }}>
+		<AuthContext.Provider value={{ user, login, logout, playerId, setPlayerInfo }}>
 			{children}
 		</AuthContext.Provider>
 	);

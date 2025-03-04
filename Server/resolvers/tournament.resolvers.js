@@ -1,13 +1,45 @@
 import TournamentModel from "../models/tournament.model.js";
 import PlayerModel from "../models/player.server.model.js";
+import UserModel from "../models/user.server.model.js";
 
 const tournamentResolvers = {
   Query: {
     tournaments: async () => {
-      return await TournamentModel.find().populate("players");
-    },    
+      const tournaments = await TournamentModel.find();
+      return tournaments.map((tournament) => ({
+        ...tournament.toObject(),
+        id: tournament._id.toString(),
+        date: tournament.date.toISOString(),
+      }));
+    },
     tournament: async (_, { id }) => {
-      return await TournamentModel.findById(id).populate("players");
+      const tournament = await TournamentModel.findById(id).populate({
+        path: "players",
+        populate: {
+          path: "user", // Populate the 'user' field inside each player
+        },
+      });
+
+      const tournamentObject = {
+        ...tournament.toObject(),
+        id: tournament._id.toString(),
+        date: tournament.date.toISOString(),
+        players: tournament.players.map((player) => ({
+          ...player,
+          id: player._id.toString(),
+          user:{
+            ...player.user.toObject(),
+            id: player.user._id.toString(),
+          }
+        })),
+      };
+      console.log(tournamentObject);
+      return tournamentObject;
+    },
+    isPlayerInTournament: async (_, { playerId, tournamentId }) => {
+      const tournament = await TournamentModel.findById(tournamentId);
+      if (tournament === null) throw new Error("Tournament not found");
+      return tournament.players.includes(playerId);
     },
   },
   Mutation: {
@@ -20,7 +52,11 @@ const tournamentResolvers = {
         players: [],
       });
       await tournament.save();
-      return tournament;
+      return {
+        ...tournament.toObject(),
+        id: tournament._id.toString(),
+        date: tournament.date.toISOString(),
+      };
     },
     joinTournament: async (_, { playerId, tournamentId }) => {
       const player = await PlayerModel.findById(playerId);
@@ -44,7 +80,14 @@ const tournamentResolvers = {
         await player.save();
       }
 
-      return await TournamentModel.findById(tournamentId).populate("players");
+      const updatedTournament = await TournamentModel.findById(
+        tournamentId
+      ).populate("players");
+      return {
+        ...updatedTournament.toObject(),
+        id: updatedTournament._id.toString(),
+        date: updatedTournament.date.toISOString(),
+      };
     },
     removeFromTournament: async (_, { playerId, tournamentId }) => {
       const player = await PlayerModel.findById(playerId);
@@ -72,7 +115,13 @@ const tournamentResolvers = {
         await player.save();
       }
 
-      return await TournamentModel.findById(tournamentId).populate("players");
+      const updatedTournament = await TournamentModel.findById(
+        tournamentId
+      ).populate("players");
+      return {
+        ...updatedTournament.toObject(),
+        date: updatedTournament.date.toISOString(),
+      };
     },
     editTournament: async (_, { tournamentId, name, game, date, status }) => {
       const tournament = await TournamentModel.findById(tournamentId);
@@ -89,7 +138,13 @@ const tournamentResolvers = {
       if (status !== undefined) tournament.status = status;
 
       await tournament.save();
-      return await TournamentModel.findById(tournamentId).populate("players");
+      const updatedTournament = await TournamentModel.findById(
+        tournamentId
+      ).populate("players");
+      return {
+        ...updatedTournament.toObject(),
+        date: updatedTournament.date.toISOString(),
+      };
     },
   },
 };
