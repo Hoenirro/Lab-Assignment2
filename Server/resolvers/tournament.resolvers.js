@@ -5,7 +5,7 @@ const tournamentResolvers = {
   Query: {
     tournaments: async () => {
       return await TournamentModel.find().populate("players");
-    },
+    },    
     tournament: async (_, { id }) => {
       return await TournamentModel.findById(id).populate("players");
     },

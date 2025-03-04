@@ -21,19 +21,15 @@ const typeDefs = `#graphql
     date: String!
     players: [Player]!
     status: String!
-  }
-
-  type AuthPayload {
-    user: User!
-    token: String!
-  }
+  }  
 
   type Query {
     user(id: ID!): User
     isLoggedIn: Boolean!
     tournaments: [Tournament!]
-    tournament(id: ID!): Tournament
+    tournament(id: ID!): Tournament    
     player(id: ID!): Player
+    playerByUserId(userId: ID!): Player    
     players: [Player!]
   }
 
@@ -83,46 +79,3 @@ const typeDefs = `#graphql
 `;
 
 export default typeDefs;
-
-// const typeDefs = `#graphql
-//   type Achievement {
-//     id: ID!
-//     playerId: String!
-//     title: String
-//     points: String
-//     earnedAt: String
-//     difficultyLevel: String
-//     isSecret: Boolean
-//   }
-
-//   type Query {
-//     achievements: [Achievement]
-//     achievement(id: ID!): Achievement
-//     achievementsByPlayer(playerId: String!): [Achievement]
-//   }
-
-//   type Mutation {
-//     createAchievement(
-//       playerId: String!
-//       title: String
-//       points: Int
-//       earnedAt: String
-//       difficultyLevel: String
-//       isSecret: Boolean
-//     ): Achievement
-
-//     updateAchievement(
-//       id: ID!
-//       playerId: String!
-//       title: String
-//       points: Int
-//       earnedAt: String
-//       difficultyLevel: String
-//       isSecret: Boolean
-//     ): Achievement
-
-//     deleteAchievement(id: ID!): Achievement
-//   }
-// `;
-
-// module.exports = typeDefs;
