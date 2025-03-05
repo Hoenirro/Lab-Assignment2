@@ -9,18 +9,16 @@
 // for the current environment is exported from the module.
 //
 // Import necessary modules
-const dotenv = require("dotenv");
-
-// Load environment variables from .env file
-dotenv.config();
+import dotenv from "dotenv";
+dotenv.config(); // Load environment variables
 
 // Dynamically load the configuration file based on NODE_ENV
 const env = process.env.NODE_ENV || "development";
 
 const config = {
 	development: {
-		db: process.env.MONGO_URI || "mongodb://localhost:27017/JorgeOviedo-Lab2",
+		db: process.env.MONGO_URI || "mongodb://localhost:27017/JorgeOviedo-SantiagoCarreno-Lab2",
 	},
 };
 // Export the configuration for the current environment
-module.exports = config[env];
+export default config[env];

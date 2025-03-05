@@ -16,12 +16,7 @@ const GET_PROFILE = gql`
 			id
 			user {
 				id
-			}
-			tournaments {
-				id
-				name
-				status
-			}
+			}			
 		}
 	}
 `;
@@ -70,29 +65,16 @@ function Profile() {
 	};
 
 	return (
-		<div className="profile">
-			<h2>Profile</h2>
-			<p>
-				<strong>Username:</strong> {data.user.username}
-			</p>
-			<p>
-				<strong>Email:</strong> {data.user.email}
-			</p>
-			<h3>Subscribed Tournaments</h3>
-			{player ? (
-				<ul>
-					{player.tournaments.map((tournament) => (
-						<li key={tournament.id}>
-							{tournament.name} - {tournament.status}
-						</li>
-					))}
-				</ul>
-			) : (
-				<p>No player data found.</p>
-			)}
-			<button onClick={handleDelete} className="delete-button">
-				Delete Account
-			</button>
+		<div className="profile-card">
+			<h2 className="profile-header">Profile</h2>
+			<div className="profile-details">
+				<p>
+					<strong>👤 Username:</strong> {data.user.username}
+				</p>
+				<p>
+					<strong>📧 Email:</strong> {data.user.email}
+				</p>
+			</div>					
 		</div>
 	);
 }

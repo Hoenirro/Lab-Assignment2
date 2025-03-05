@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import config from "./config.js";
-import "../models/achievement.js";
 
 // Define the Mongoose configuration method
 const connectToDatabase = async () => {

@@ -1,42 +1,83 @@
 const typeDefs = `#graphql
-  type Achievement {
+  type User {
     id: ID!
-    playerId: String!
-    title: String
-    points: String
-    earnedAt: String
-    difficultyLevel: String
-    isSecret: Boolean
+    username: String!
+    email: String!
+    password: String!
+    role: String!
   }
 
+  type Player {
+    id: ID!
+    user: User
+    ranking: Int!
+    tournaments: [Tournament]!
+  }
+
+  type Tournament {
+    id: ID!
+    name: String!
+    game: String!
+    date: String!
+    players: [Player]!
+    status: String!
+  }  
+
   type Query {
-    achievements: [Achievement]
-    achievement(id: ID!): Achievement
-    achievementsByPlayer(playerId: String!): [Achievement]
+    user(id: ID!): User
+    isLoggedIn: Boolean!
+    tournaments: [Tournament!]
+    tournament(id: ID!): Tournament    
+    isPlayerInTournament(playerId: ID!, tournamentId: ID!): Boolean
+    player(id: ID!): Player
+    playerByUserId(userId: ID!): Player    
+    playerByUsername(username: String!): [Player]
+    players: [Player!]    
   }
 
   type Mutation {
-    createAchievement(
-      playerId: String!
-      title: String
-      points: Int
-      earnedAt: String
-      difficultyLevel: String
-      isSecret: Boolean
-    ): Achievement
-    
-    updateAchievement(
-      id: ID!
-      playerId: String!
-      title: String
-      points: Int
-      earnedAt: String
-      difficultyLevel: String
-      isSecret: Boolean
-    ): Achievement
-    
-    deleteAchievement(id: ID!): Achievement
+    createUser(
+    username: String!, 
+    email: String!, 
+    password: String!, 
+    role: String!
+    ): User
+
+    login(
+    email: String!, 
+    password: String!
+    ): User
+
+    logOut: String
+
+    updateUser(id: ID!, userName: String!, email: String!): User
+    deleteUser(userId: ID!): String
+
+    createTournament(
+    name: String!, 
+    game: String!, 
+    date: String!, 
+    status: String!
+    ): Tournament
+
+    joinTournament(
+    playerId: ID!, 
+    tournamentId: ID!
+    ): Tournament
+
+    removeFromTournament(
+    playerId: ID!, 
+    tournamentId: ID!
+    ): Tournament    
+
+    editTournament(
+      tournamentId: ID!
+      name: String
+      game: String
+      date: String
+      status: String
+    ): Tournament
   }
 `;
 
-module.exports = typeDefs;
+export default typeDefs;

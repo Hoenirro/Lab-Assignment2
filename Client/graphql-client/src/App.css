@@ -2,6 +2,7 @@
 body {
 	font-family: "Arial", sans-serif;
 	background-color: #f5f7fa;
+	color: black;
 	margin: 0;
 	padding: 0;
 }
@@ -68,6 +69,12 @@ body {
 	min-height: 100vh;
 	min-width: 250px;
 	position: relative;
+}
+
+.three-container {
+	display: flex;
+	justify-content: space-between;
+	margin-left: 200px;
 }
 
 /* General button styles */
