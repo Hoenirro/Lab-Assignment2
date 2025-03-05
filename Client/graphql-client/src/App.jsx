@@ -15,6 +15,7 @@ import BooksWM from "./components/bookswm.jsx";
 import TypeWriter from "./components/typewriter.jsx";
 import BookOpen from "./components/bookopen.jsx";
 import Players from "./components/Players";
+import CreateUser from "./components/CreateUser";
 import TournamentEditor from "./components/TournamentEditor";
 
 function App() {
@@ -64,6 +65,9 @@ function App() {
 											<li>
 												<Link to="/createtournament">Create Tournament</Link>
 											</li>
+											<li>
+												<Link to="/createuser">Create User</Link>
+											</li>
 										</>
 									)}
 								</>
@@ -84,6 +88,7 @@ function App() {
 							path="/createtournament"
 							element={<TournamentEditor create={true} />}
 						/>
+						<Route path="/createuser" element={<CreateUser create={true} />} />
 						<Route
 							path="/edittournament/:id"
 							element={<TournamentEditor create={false} />}
