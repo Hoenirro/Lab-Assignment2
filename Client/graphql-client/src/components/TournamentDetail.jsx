@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation, useLazyQuery, gql } from "@apollo/client";
 import { useAuth } from "../AuthContext.jsx";
@@ -24,13 +24,6 @@ const GET_TOURNAMENT = gql`
   }
 `;
 
-// GraphQL Query to fetch all players (to find the logged-in user's player ID)
-const IS_PLAYER_IN_TOURNAMENT = gql`
-  query IsPlayerInTournament($playerId: ID!, $tournamentId: ID!) {
-    isPlayerInTournament(playerId: $playerId, tournamentId: $tournamentId)
-  }
-`;
-
 const SEARCH_PLAYER = gql`
   query SearchPlayer($username: String!) {
     playerByUsername(username: $username) {
@@ -48,9 +41,6 @@ const JOIN_TOURNAMENT = gql`
   mutation JoinTournament($playerId: ID!, $tournamentId: ID!) {
     joinTournament(playerId: $playerId, tournamentId: $tournamentId) {
       id
-      players {
-        id
-      }
     }
   }
 `;
@@ -60,9 +50,6 @@ const REMOVE_FROM_TOURNAMENT = gql`
   mutation RemoveFromTournament($playerId: ID!, $tournamentId: ID!) {
     removeFromTournament(playerId: $playerId, tournamentId: $tournamentId) {
       id
-      players {
-        id
-      }
     }
   }
 `;
@@ -86,15 +73,6 @@ function TournamentDetail() {
     variables: { username: searchUsername },
   });
 
-  const {
-    loading: playerLoading,
-    error: playerError,
-    data: playerData,
-  } = useQuery(IS_PLAYER_IN_TOURNAMENT, {
-    variables: { playerId: playerId, tournamentId: id },
-    skip: !user || user.role !== "Player" || !playerId, // Skip this query if no user is logged in
-  });
-
   // Mutations for joining and quitting the tournament
   const [joinTournament] = useMutation(JOIN_TOURNAMENT, {
     refetchQueries: [{ query: GET_TOURNAMENT, variables: { id } }],
@@ -105,12 +83,10 @@ function TournamentDetail() {
   });
 
   // Handle loading and error states
-  if (tournamentLoading || (user && playerLoading)) return <p>Loading...</p>;
+  if (tournamentLoading) return <p>Loading...</p>;
   if (tournamentError) return <p>Error: {tournamentError.message}</p>;
-  if (user && playerError) return <p>Error: {playerError.message}</p>;
 
   const tournament = tournamentData.tournament;
-
   // Handler for joining the tournament
   const handleJoin = async () => {
     if (!playerId) {
@@ -119,7 +95,6 @@ function TournamentDetail() {
     }
     try {
       await joinTournament({ variables: { playerId, tournamentId: id } });
-      alert("Joined successfully!");
     } catch (error) {
       alert(error.message);
     }
@@ -133,7 +108,6 @@ function TournamentDetail() {
     }
     try {
       await removeFromTournament({ variables: { playerId, tournamentId: id } });
-      alert("Quit successfully!");
     } catch (error) {
       alert(error.message);
     }
@@ -143,23 +117,33 @@ function TournamentDetail() {
     try {
       await searchUser({
         variables: { username: searchUsername },
-      }).then(() => console.log(searchUserData));
+      });
     } catch (error) {
       alert(error.message);
     }
   };
 
-const handleAddPlayer = async (playerToAddId) => {
-	try {
-		await joinTournament({ variables: { playerId: playerToAddId, tournamentId: id } });
-		alert("Player added successfully!");
-	} catch (error) {
-		alert(error.message);
-	}
-};
+  const handleAddPlayer = async (playerToAddId) => {
+    try {
+      await joinTournament({
+        variables: { playerId: playerToAddId, tournamentId: id },
+      });
+      setSearchUsername("");
+      await searchUser({
+        variables: { username: "" },
+      });
+      alert("Player added successfully!");
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const isRegistered = tournament.players.some(
+    (player) => player.id === playerId
+  );
 
   return (
-    <div className="tournament-d</div>etail">
+    <div className="tournament-detail">
       <h2>{tournament.name}</h2>
       <p>
         <strong>Game:</strong> {tournament.game}
@@ -181,7 +165,7 @@ const handleAddPlayer = async (playerToAddId) => {
         <>
           {user.role === "Player" && (
             <>
-              {playerData ? (
+              {isRegistered ? (
                 <button onClick={handleQuit}>Quit Tournament</button>
               ) : (
                 <button onClick={handleJoin}>Register for Tournament</button>
@@ -201,14 +185,21 @@ const handleAddPlayer = async (playerToAddId) => {
               </div>
               {searchUserData && searchUserData.playerByUsername && (
                 <ul>
-                  {searchUserData.playerByUsername.map((player) => (
-                    <li key={player.id} onClick={() => console.log(player.id)}>
-                      {player.user.username}
-                      <button onClick={() => handleAddPlayer(player.id)}>                        
-                        Add to Tournament
-                      </button>
-                    </li>
-                  ))}
+                  {searchUserData.playerByUsername.map((player) => {
+                    const isPlayerInTournament = tournament.players.some(
+                      (tournamentPlayer) => tournamentPlayer.id === player.id
+                    );
+                    return (
+                      <li key={player.id}>
+                        {player.user.username}
+                        {!isPlayerInTournament && (
+                          <button onClick={() => handleAddPlayer(player.id)}>
+                            Add to Tournament
+                          </button>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
             </>

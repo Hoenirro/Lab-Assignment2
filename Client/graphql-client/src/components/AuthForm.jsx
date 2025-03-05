@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useMutation, useQuery, gql } from "@apollo/client";
 import { useAuth } from "../AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
 import "./AuthForm.css";
 
 const REGISTER = gql`
@@ -66,6 +67,7 @@ function AuthForm() {
 			skip: !user || user.role !== "Player",
 		}
 	); // Fetch player data
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (user && user.role === "Player") {
@@ -110,7 +112,8 @@ function AuthForm() {
 	const handleLogOut = () => {
 		logOut()
 		  .then(() => {
-			logout();			
+			logout();	
+			navigate("/");		
 		  })
 		  .catch((err) => {
 			console.error(err.message);

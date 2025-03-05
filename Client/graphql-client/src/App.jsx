@@ -10,6 +10,7 @@ import History from "./components/History.jsx";
 import TournamentDetail from "./components/TournamentDetail";
 import Players from "./components/Players.jsx";
 import TournamentEditor from "./components/TournamentEditor.jsx";
+import CreateUsers from "./components/CreateUser.jsx";
 
 function App() {
   const { user } = useAuth();
@@ -42,6 +43,9 @@ function App() {
                 <li>
                   <Link to="/createtournament">Create Tournament</Link>
                 </li>
+                <li>
+                  <Link to="/createusers">Create Users</Link>
+                </li>
               </>
             )}
           </>
@@ -58,6 +62,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/players" element={<Players />} />
             <Route path="/history" element={<History />} />
+            <Route path="/createusers" element={<CreateUsers />} />
             <Route path="/createtournament" element={<TournamentEditor create={true}/>} />
             <Route path="/edittournament" element={<TournamentEditor create={false}/>} />
             <Route path="/tournament/:id" element={<TournamentDetail />} />

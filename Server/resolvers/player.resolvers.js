@@ -13,6 +13,9 @@ const playerResolvers = {
       return player;
     },
     playerByUsername: async (_, { username }) => {
+      if (!username.trim()) {
+        throw new Error("Username cannot be empty");
+      }
       const players = await PlayerModel.find()
         .populate({
           path: "user",

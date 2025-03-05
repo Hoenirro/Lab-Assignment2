@@ -121,6 +121,7 @@ const tournamentResolvers = {
       return {
         ...updatedTournament.toObject(),
         date: updatedTournament.date.toISOString(),
+        id: updatedTournament._id.toString(),
       };
     },
     editTournament: async (_, { tournamentId, name, game, date, status }) => {
@@ -144,6 +145,7 @@ const tournamentResolvers = {
       return {
         ...updatedTournament.toObject(),
         date: updatedTournament.date.toISOString(),
+        id: updatedTournament._id.toString(),
       };
     },
   },

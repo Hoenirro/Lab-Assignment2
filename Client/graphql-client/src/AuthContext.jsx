@@ -11,9 +11,9 @@ export function AuthProvider({ children }) {
 		if (storedUser) {
 			setUser(JSON.parse(storedUser)); // Load user from localStorage
 		}
-		const storedPlayerInfo = localStorage.getItem("player");
+		const storedPlayerInfo = localStorage.getItem("playerId");
 		if (storedPlayerInfo) {
-			setUser(JSON.parse(storedPlayerInfo)); // Load user from localStorage
+			setPlayerId(JSON.parse(storedPlayerInfo)); // Load user from localStorage
 		}
 
 	}, []);
