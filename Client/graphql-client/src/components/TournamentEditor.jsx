@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { useMutation, gql } from "@apollo/client";
 import { useAuth } from "../AuthContext.jsx";
 import "./TournamentEditor.css";
+import { useNavigate } from "react-router-dom";
+import "./AuthForm.css";
 
 const CREATE_TOURNAMENT = gql`
 	mutation CreateTournament(
@@ -49,6 +51,7 @@ function TournamentEditor(props) {
 	const [status, setStatus] = useState("Upcoming");
 	const [createTournament] = useMutation(CREATE_TOURNAMENT);
 	const [editTournament] = useMutation(EDIT_TOURNAMENT);
+	const navigate = useNavigate();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -61,7 +64,7 @@ function TournamentEditor(props) {
 				setGame("");
 				setDate("");
 				setStatus("Upcoming");
-				alert("Created successfully!");
+				navigate("/");
 			} else {
 				const { data } = await editTournament({
 					variables: {
@@ -76,7 +79,7 @@ function TournamentEditor(props) {
 				setGame("");
 				setDate("");
 				setStatus("Upcoming");
-				alert("Edited successfully!");
+				navigate("/");
 			}
 		} catch (error) {
 			alert(error.message);
@@ -104,10 +107,7 @@ function TournamentEditor(props) {
 				type="date"
 				placeholder="Date"
 				value={date}
-				onChange={(e) => {
-					console.log(e.target.value);
-					setDate(e.target.value);
-				}}
+				onChange={(e) => setDate(e.target.value)}
 				required
 			/>
 			{!create && (

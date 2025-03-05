@@ -16,9 +16,9 @@ export function AuthProvider({ children }) {
 				localStorage.removeItem("user");
 			}
 		}
-		const storedPlayerInfo = localStorage.getItem("player");
+		const storedPlayerInfo = localStorage.getItem("playerId");
 		if (storedPlayerInfo) {
-			setUser(JSON.parse(storedPlayerInfo)); // Load user from localStorage
+			setPlayerId(JSON.parse(storedPlayerInfo)); // Load user from localStorage
 		}
 
 	}, []);
