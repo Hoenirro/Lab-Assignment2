@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useMutation, gql } from "@apollo/client";
 import { useAuth } from "../AuthContext.jsx";
 import "./TournamentEditor.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./AuthForm.css";
 
 const CREATE_TOURNAMENT = gql`
@@ -44,6 +44,7 @@ const EDIT_TOURNAMENT = gql`
 `;
 
 function TournamentEditor(props) {
+	const { id } = useParams();
 	const { create } = props;
 	const [name, setName] = useState("");
 	const [game, setGame] = useState("");

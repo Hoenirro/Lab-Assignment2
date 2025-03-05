@@ -85,7 +85,7 @@ function App() {
 							element={<TournamentEditor create={true} />}
 						/>
 						<Route
-							path="/edittournament"
+							path="/edittournament/:id"
 							element={<TournamentEditor create={false} />}
 						/>
 						<Route path="/tournament/:id" element={<TournamentDetail />} />
@@ -98,7 +98,7 @@ function App() {
 						<Route path="/history" element={<BooksLP />} />
 						<Route path="/players" element={<TypeWriter />} />
 						<Route path="/createtournament" element={<BookOpen />} />
-						<Route path="/edittournament" element={<BooksLP />} />
+						<Route path="/edittournament/:id" element={<BooksLP />} />
 						<Route path="/tournament/:id" element={<BooksWM />} />
 					</Routes>
 				</div>

@@ -14,20 +14,20 @@ const GET_TOURNAMENTS = gql`
 			name
 			game
 			date
-			status			
+			status
 		}
 	}
 `;
 
 function TournamentList() {
-	const {user} = useAuth();
+	const { user } = useAuth();
 	const { loading, error, data, refetch } = useQuery(GET_TOURNAMENTS);
 	const [filter, setFilter] = useState("All");
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		refetch();
-	  });
+	});
 
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error: {error.message}</p>;
@@ -37,8 +37,8 @@ function TournamentList() {
 	);
 
 	const handleEdit = (tournament) => {
-		navigate("edit/" + tournament.id);
-	}
+		navigate("/edittournament/" + tournament.id);
+	};
 
 	const isAdmin = user && user.role === "Admin";
 	return (
@@ -55,10 +55,10 @@ function TournamentList() {
 					<li key={tournament.id}>
 						<Link to={`/tournament/${tournament.id}`}>
 							{tournament.name} ({tournament.game}) - {tournament.status}
-							{isAdmin && (
-								<Button onClick={() => handleEdit(tournament)}>Edit</Button>
-							)}							
-						</Link>						
+						</Link>
+						{isAdmin && (
+							<Button onClick={() => handleEdit(tournament)}>Edit</Button>
+						)}
 					</li>
 				))}
 			</ul>
