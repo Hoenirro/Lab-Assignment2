@@ -98,7 +98,7 @@ function Trophy() {
 		};
 	}, []);
 
-	return <div ref={mountRef} style={{ width: "800px", height: "800px" }} />;
+	return <div ref={mountRef} style={{ width: "400px", height: "400px" }} />;
 }
 
 export default Trophy;

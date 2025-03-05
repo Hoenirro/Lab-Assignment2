@@ -14,6 +14,8 @@ import BooksLP from "./components/bookslp.jsx";
 import BooksWM from "./components/bookswm.jsx";
 import TypeWriter from "./components/typewriter.jsx";
 import BookOpen from "./components/bookopen.jsx";
+import Players from "./components/Players";
+import TournamentEditor from "./components/TournamentEditor";
 
 function App() {
 	const { user } = useAuth();
@@ -49,9 +51,21 @@ function App() {
 									<li>
 										<Link to="/profile">Profile</Link>
 									</li>
-									<li>
-										<Link to="/history">History</Link>
-									</li>
+									{user.role === "Player" && (
+										<li>
+											<Link to="/history">History</Link>
+										</li>
+									)}
+									{user.role === "Admin" && (
+										<>
+											<li>
+												<Link to="/players">Players</Link>
+											</li>
+											<li>
+												<Link to="/createtournament">Create Tournament</Link>
+											</li>
+										</>
+									)}
 								</>
 							)}
 						</ul>
@@ -64,7 +78,16 @@ function App() {
 					<Routes>
 						<Route path="/" element={<TournamentList />} />
 						<Route path="/profile" element={<Profile />} />
+						<Route path="/players" element={<Players />} />
 						<Route path="/history" element={<History />} />
+						<Route
+							path="/createtournament"
+							element={<TournamentEditor create={true} />}
+						/>
+						<Route
+							path="/edittournament"
+							element={<TournamentEditor create={false} />}
+						/>
 						<Route path="/tournament/:id" element={<TournamentDetail />} />
 					</Routes>
 				</main>
@@ -73,6 +96,9 @@ function App() {
 						<Route path="/" element={<Trophy />} />
 						<Route path="/profile" element={<PersonalPC />} />
 						<Route path="/history" element={<BooksLP />} />
+						<Route path="/players" element={<TypeWriter />} />
+						<Route path="/createtournament" element={<BookOpen />} />
+						<Route path="/edittournament" element={<BooksLP />} />
 						<Route path="/tournament/:id" element={<BooksWM />} />
 					</Routes>
 				</div>

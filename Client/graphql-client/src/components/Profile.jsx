@@ -70,28 +70,41 @@ function Profile() {
 	};
 
 	return (
-		<div className="profile">
-			<h2>Profile</h2>
-			<p>
-				<strong>Username:</strong> {data.user.username}
-			</p>
-			<p>
-				<strong>Email:</strong> {data.user.email}
-			</p>
-			<h3>Subscribed Tournaments</h3>
-			{player ? (
-				<ul>
-					{player.tournaments.map((tournament) => (
-						<li key={tournament.id}>
-							{tournament.name} - {tournament.status}
-						</li>
-					))}
-				</ul>
-			) : (
-				<p>No player data found.</p>
-			)}
+		<div className="profile-card">
+			<h2 className="profile-header">Profile</h2>
+			<div className="profile-details">
+				<p>
+					<strong>👤 Username:</strong> {data.user.username}
+				</p>
+				<p>
+					<strong>📧 Email:</strong> {data.user.email}
+				</p>
+			</div>
+			<div className="tournament-section">
+				<h3>Subscribed Tournaments</h3>
+				{player ? (
+					<ul className="tournament-list">
+						{player.tournaments.map((tournament) => (
+							<li key={tournament.id} className="tournament-item">
+								<span className="tournament-name">{tournament.name}</span> -{" "}
+								<span
+									className={`status ${
+										tournament.status === "Active"
+											? "status-active"
+											: "status-inactive"
+									}`}
+								>
+									{tournament.status}
+								</span>
+							</li>
+						))}
+					</ul>
+				) : (
+					<p>No player data found.</p>
+				)}
+			</div>
 			<button onClick={handleDelete} className="delete-button">
-				Delete Account
+				🗑 Delete Account
 			</button>
 		</div>
 	);

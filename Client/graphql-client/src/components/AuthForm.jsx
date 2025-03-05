@@ -1,4 +1,3 @@
-// components/AuthForm.jsx
 import React, { useState, useEffect } from "react";
 import { useMutation, useQuery, gql } from "@apollo/client";
 import { useAuth } from "../AuthContext.jsx";
@@ -16,7 +15,7 @@ const REGISTER = gql`
 			email: $email
 			password: $password
 			role: $role
-		) {			
+		) {
 			id
 			username
 		}
@@ -25,7 +24,7 @@ const REGISTER = gql`
 
 const LOGIN = gql`
 	mutation Login($email: String!, $password: String!) {
-		login(email: $email, password: $password){
+		login(email: $email, password: $password) {
 			id
 			username
 			email
@@ -35,16 +34,16 @@ const LOGIN = gql`
 `;
 
 const LOG_OUT = gql`
-	mutation Logout{
+	mutation Logout {
 		logOut
 	}
 `;
 
 const GET_PLAYER_BY_USER_ID = gql`
 	query GetPlayerByUserId($userId: ID!) {
-		playerByUserId(userId: $userId){
+		playerByUserId(userId: $userId) {
 			id
-		}		
+		}
 	}
 `;
 
@@ -59,17 +58,20 @@ function AuthForm() {
 	const [username, setUsername] = useState("");
 	const [register] = useMutation(REGISTER);
 	const [loginMutation] = useMutation(LOGIN);
-	const [logOut] = useMutation(LOG_OUT);		
-	const { loading, error, data: playerData, refetch } = useQuery(GET_PLAYER_BY_USER_ID, 
-		{
-			variables: { userId },
-			skip: !user || user.role !== "Player",
-		}
-	); // Fetch player data
+	const [logOut] = useMutation(LOG_OUT);
+	const {
+		loading,
+		error,
+		data: playerData,
+		refetch,
+	} = useQuery(GET_PLAYER_BY_USER_ID, {
+		variables: { userId },
+		skip: !user || user.role !== "Player",
+	});
 
 	useEffect(() => {
 		if (user && user.role === "Player") {
-			refetch().then(({ data }) => {								
+			refetch().then(({ data }) => {
 				setPlayerInfo(data.playerByUserId.id);
 			});
 		}
@@ -85,7 +87,15 @@ function AuthForm() {
 				}
 				const { data } = await register({
 					variables: { username, email, password, role },
-				});								
+				});
+				// Auto-login after registration
+				login({
+					id: data.createUser.id,
+					username: data.createUser.username,
+					email,
+					role,
+				});
+				setUserId(data.createUser.id); // Set userId for player query
 				setEmail("");
 				setPassword("");
 				setRepeatPassword("");
@@ -95,11 +105,11 @@ function AuthForm() {
 				const { data } = await loginMutation({
 					variables: { email, password },
 				});
-				login(data.login);	
-				setUserId(data.login.id);			
+				login(data.login);
+				setUserId(data.login.id);
 				setEmail("");
 				setPassword("");
-				console.log("Login user data:", data.login);				
+				console.log("Login user data:", data.login);
 				alert("Logged in successfully!");
 			}
 		} catch (error) {
@@ -109,19 +119,19 @@ function AuthForm() {
 
 	const handleLogOut = () => {
 		logOut()
-		  .then(() => {
-			logout();			
-		  })
-		  .catch((err) => {
-			console.error(err.message);
-		  });
-	  };
+			.then(() => {
+				logout();
+			})
+			.catch((err) => {
+				console.error(err.message);
+			});
+	};
 
 	if (user) {
 		return (
 			<div className="auth-form">
 				<div>
-					<p style={{color: "black"}}>Welcome, {user.username}!</p>
+					<p style={{ color: "black" }}>Welcome, {user.username}!</p>
 					<button onClick={handleLogOut}>Logout</button>
 				</div>
 			</div>
@@ -156,33 +166,33 @@ function AuthForm() {
 			/>
 			{isRegister && (
 				<>
-				<input
-					type="password"
-					placeholder="Repeat Password"
-					value={repeatPassword}
-					onChange={(e) => setRepeatPassword(e.target.value)}
-					required
-				/>
-				<div>
-					<label>
-						<input
-							type="radio"
-							value="Player"
-							checked={role === "Player"}
-							onChange={(e) => setRole(e.target.value)}
-						/>
-						Player
-					</label>
-					<label>
-						<input
-							type="radio"
-							value="Admin"
-							checked={role === "Admin"}
-							onChange={(e) => setRole(e.target.value)}
-						/>
-						Admin
-					</label>
-				</div>
+					<input
+						type="password"
+						placeholder="Repeat Password"
+						value={repeatPassword}
+						onChange={(e) => setRepeatPassword(e.target.value)}
+						required
+					/>
+					<div>
+						<label>
+							<input
+								type="radio"
+								value="Player"
+								checked={role === "Player"}
+								onChange={(e) => setRole(e.target.value)}
+							/>
+							Player
+						</label>
+						<label>
+							<input
+								type="radio"
+								value="Admin"
+								checked={role === "Admin"}
+								onChange={(e) => setRole(e.target.value)}
+							/>
+							Admin
+						</label>
+					</div>
 				</>
 			)}
 			<button type="submit">{isRegister ? "Register" : "Login"}</button>
