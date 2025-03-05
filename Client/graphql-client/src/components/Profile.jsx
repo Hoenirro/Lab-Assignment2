@@ -16,12 +16,7 @@ const GET_PROFILE = gql`
 			id
 			user {
 				id
-			}
-			tournaments {
-				id
-				name
-				status
-			}
+			}			
 		}
 	}
 `;
@@ -79,33 +74,7 @@ function Profile() {
 				<p>
 					<strong>📧 Email:</strong> {data.user.email}
 				</p>
-			</div>
-			<div className="tournament-section">
-				<h3>Subscribed Tournaments</h3>
-				{player ? (
-					<ul className="tournament-list">
-						{player.tournaments.map((tournament) => (
-							<li key={tournament.id} className="tournament-item">
-								<span className="tournament-name">{tournament.name}</span> -{" "}
-								<span
-									className={`status ${
-										tournament.status === "Active"
-											? "status-active"
-											: "status-inactive"
-									}`}
-								>
-									{tournament.status}
-								</span>
-							</li>
-						))}
-					</ul>
-				) : (
-					<p>No player data found.</p>
-				)}
-			</div>
-			<button onClick={handleDelete} className="delete-button">
-				🗑 Delete Account
-			</button>
+			</div>					
 		</div>
 	);
 }

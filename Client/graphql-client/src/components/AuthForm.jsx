@@ -87,7 +87,9 @@ function AuthForm() {
 				}
 				const { data } = await register({
 					variables: { username, email, password, role },
-				});								
+				});
+				login({ id: data.createUser.id, username: data.createUser.username, email, role});
+				setUserId(data.createUser.id);			
 				setEmail("");
 				setPassword("");
 				setRepeatPassword("");
